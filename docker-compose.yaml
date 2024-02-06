@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  # LB负载网关
+  load-balance:
+    container_name: red-tomato-load-balance
+    image: harbor.ihuizong.cn:1443/base/tengine:3.1.0
+    ports:
+    - 8081:80
+    volumes:
+    - ./lb-nginx.conf:/etc/nginx/conf.d/lb-nginx.conf
+    networks:
+    - grey_canary
+
+
+  # v1版本代码
+  red-tomato-v1:
+    container_name: red-tomato-v1
+    image: harbor.ihuizong.cn:1443/base/tengine:3.1.0
+    volumes:
+    - ./daping.isaveu.cn.conf:/etc/nginx/conf.d/daping.isaveu.cn.conf
+    - ./v1:/etc/nginx/html
+    networks:
+    - grey_canary
+
+
+  # v2版本代码
+  red-tomato-v2:
+    container_name: red-tomato-v2
+    image: harbor.ihuizong.cn:1443/base/tengine:3.1.0
+    volumes:
+    - ./daping.isaveu.cn.conf:/etc/nginx/conf.d/daping.isaveu.cn.conf
+    - ./v2:/etc/nginx/html
+    networks:
+    - grey_canary
+
+
+networks:
+  grey_canary:
+    driver: bridge
